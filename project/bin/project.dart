@@ -34,8 +34,10 @@ int counter = 1;
 void main() {
   print("Welcome to pur library");
 
-  int quit = 1;
-  int back = 1;// to return back one step
+  bool quit = false;
+  bool back = false; // to return back one step
+  bool find = false;
+  var theBook;
 
   do {
     print(
@@ -52,69 +54,148 @@ void main() {
 
       case "2": //Search for book
         {
-           print(
-                "please chose your searching method:\n1- Book ID\n2- Book title\n3- Book author");
-            String? searchInput =
-                stdin.readLineSync(); //it will take the method of search
+          print(
+              "please chose your searching method:\n1- Book ID\n2- Book title\n3- Book author");
+          String? searchInput =
+              stdin.readLineSync(); //it will take the method of search
           do {
-           
             switch (searchInput) {
-              case "1":
+              case "1": //-----------------------------------------------search by ID
                 {
                   print("Please inter the book ID or inter R to return");
                   String? bookId = stdin.readLineSync();
-                  bool find = false;
 
+                  if (bookId == "R" || bookId == "r") {
+                    //to return to main menu or one step
+                    back = true;
+                    break;
+                  }
                   for (var i in Books) {
-                    if (i.book_id == bookId) {
+                    if (i.book_id == int.parse(bookId!)) {
+                      // changing String to int to check ID number
                       // checking if the ID exist in the library
+                      theBook = i;
                       print(i.viewInformation());
                       find = true;
+                      print(theBook.book_title); // testing
                     }
                   }
-                   if (bookId == "R" || bookId == "r") {
-                    back = 0;
+                  if (find == false) {
+                    print("your book with ID '${bookId}' dose not exist");
+                  }
+                }
+
+                break;
+              case "2": //------------------------------------------------search by Title
+                {
+                  print("Please inter the book title or inter R to return");
+                  String? bookTitle = stdin.readLineSync();
+                  
+                  if (bookTitle == "R" || bookTitle == "r") {
+                    //to return to main menu or one step
+                    back = true;
+                    break;
                   }
 
-                  else if (find == false) {
-                    print("your book with ID '${bookId}' dose not exist");
-                  } 
-                  
+                  for (var i in Books) {
+                    if (i.book_title == bookTitle) {
+                      // changing String to int to check ID number
+                      // checking if the ID exist in the library
+                      theBook = i;
+                      print(i.viewInformation());
+                      find = true;
+                      print(theBook.book_title);
+                    }
+                  }
+                  if (find == false) {
+                    print("your book with ID '${bookTitle}' dose not exist");
+                  }
                 }
+                break;
+              case "3": //------------------------------------------------search by Author
+                {
+                  print("Please inter the book title or inter R to return");
+                  String? bookAuthor = stdin.readLineSync();
+                  
+                  if (bookAuthor == "R" || bookAuthor == "r") {
+                    //to return to main menu or one step
+                    back = true;
+                    break;
+                  }
+
+                  for (var i in Books) {
+                    if (i.book_title == bookAuthor) {
+                      // changing String to int to check ID number
+                      // checking if the ID exist in the library
+                      theBook = i;
+                      print(i.viewInformation());
+                      find = true;
+                      print(theBook.book_title);
+                    }
+                  }
+                  if (find == false) {
+                    print("your book with ID '${bookAuthor}' dose not exist");
+                  }
+                }
+                break;
+              default:
+                {
+                  print("Invalid choice");
+                  back = true;
+                }
+                break;
             }
-          } while (back == 1);
-          back = 1;//return the value of back to 1
+            if (find == true) {
+              
+              print(
+                  "you find the book that you are looking for, what do you want to do?\n1- Edit the book\n2- Buy the book\n3- Delete the book\n4- Return to the main menu");
+              String? fundedBook = stdin.readLineSync();
+              if (fundedBook == "1") {
+                theBook.edit();
+                back = true;
+              } else if (fundedBook == "2") {
+                theBook.sell();
+                back = true;
+              } else if (fundedBook == "3") {
+                theBook.delete();
+                back = true;
+              } else if (fundedBook == "4") {
+                back = true;
+              } else {
+                print("miss input, please try agin");
+                back = true;
+              }
+            }
+          } while (back == false);
+          back = false; //return the value of back to false
           break;
-        }
-      case "2":
-        {
-          break;
+          //end of Case 2
         }
 
       case "3": //Add a book
         {
-          print("Fair");
+          Book().add();
         }
         break;
 
       case "4": //sell a book
         {
-          print("Fair");
+          Book().sell();
         }
         break;
       case "5": //Delete a book
         {
-          print("Fair");
+          Book().delete();
         }
         break;
       case "Q": //Quit
         {
-          quit = 0;
+          quit = true;
         }
         break;
       case "q": // Quit if you are lazy
         {
-          quit = 0;
+          quit = true;
         }
         break;
 
@@ -124,7 +205,8 @@ void main() {
         }
         break;
     }
-  } while (quit == 1);
+  } while (quit == false);
+  print("Goodbye, See you in the next time");
 }
 
 abstract class Library {
@@ -148,20 +230,30 @@ class Book extends Library {
   }
 
   @override
-  add() {}
+  add() {
+    print("Add a book");
+  }
 
   @override
-  delete() {}
+  delete() {
+    print("the book Deleted ");
+  }
 
   @override
-  edit() {}
+  edit() {
+    print("the book edited");
+  }
 
   @override
   search() {}
 
   @override
-  sell() {}
+  sell() {
+    print("the sell is done");
+  }
 
   @override
-  viewInformation() {}
+  viewInformation() {
+    print("view all library book");
+  }
 }
